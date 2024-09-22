@@ -18,6 +18,8 @@ def saveCompetitions(competitions):
         json.dump({"competitions": competitions}, comps, indent=4)
 
 
+
+
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
