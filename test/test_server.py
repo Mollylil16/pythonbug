@@ -38,7 +38,8 @@ def test_purchase_places_success(client, test_data):
 
     assert response.status_code == 200
     assert b'Great, booking complete!' in response.data
-    assert int(clubs[0]['points']) - 1 == int(loadClubs()[0]['points']) # Vérifie la déduction des points
+    updated_clubs = loadClubs()
+    assert int(clubs[0]['points']) - 1 == int(updated_clubs[0]['points'])
 
 def test_purchase_places_not_enough_points(client, test_data):
     clubs, competitions = test_data
