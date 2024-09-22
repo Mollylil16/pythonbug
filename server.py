@@ -2,16 +2,14 @@ import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 
-def loadClubs():
-    with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
+def saveClubs(clubs):
+    with open('clubs.json', 'w') as c:
+        json.dump({'clubs': clubs}, c, indent=4)
 
 
-def loadCompetitions():
-    with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
+def saveCompetitions(competitions):
+    with open('competitions.json', 'w') as comps:
+        json.dump({'competitions': competitions}, comps, indent=4)
 
 
 app = Flask(__name__)
@@ -47,27 +45,28 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
 
-    
     if placesRequired > 12:
         flash('You cannot book more than 12 places.')
         return render_template('welcome.html', club=club, competitions=competitions)
 
-    
     if int(club['points']) < placesRequired:
         flash('You do not have enough points to book these places.')
         return render_template('welcome.html', club=club, competitions=competitions)
 
-    
     if int(competition['numberOfPlaces']) < placesRequired:
         flash('Not enough places available for this competition.')
         return render_template('welcome.html', club=club, competitions=competitions)
 
-    
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
     club['points'] = int(club['points']) - placesRequired
-    flash('Great - booking complete!')
+
     
+    saveClubs(clubs)
+    saveCompetitions(competitions)
+
+    flash('Great - booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
+
 
 
 
