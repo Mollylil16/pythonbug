@@ -73,3 +73,8 @@ def test_login_failure(client):
 
     assert response.status_code == 200
     assert b'Something went wrong-please try again' in response.data
+    
+def test_public_club_points(client):
+    response = client.get('/public_club_points')
+    assert response.status_code == 200
+    assert b'Public Club Points' in response.data

@@ -39,7 +39,10 @@ def showSummary():
     club = club[0]
     return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
-
+@app.route('/public_club_points')
+def publicClubPoints():
+    return render_template('public_points.html', clubs=clubs)
+    
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
     foundClub = [c for c in clubs if c['name'] == club][0]

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,11 +7,18 @@
 </head>
 <body>
     <h1>Welcome to the GUDLFT Registration Portal!</h1>
-    Please enter your secretary email to continue:
+    
+    <!-- Formulaire pour la connexion par email -->
+    <p>Please enter your secretary email to continue:</p>
     <form action="showSummary" method="post">
         <label for="email">Email:</label>
-        <input type="email" name="email" id=""/>
+        <input type="email" name="email" id="email" required/>
         <button type="submit">Enter</button>
     </form>
+
+    <!-- Lien vers la page Public Club Points -->
+    <p>
+        Or, you can <a href="{{ url_for('publicClubPoints') }}">View Public Club Points</a> directly.
+    </p>
 </body>
 </html>

@@ -1,12 +1,20 @@
-from locust import HttpUser, task, between
+from locust import HttpUser, TaskSet, task, between
 
-class PerformanceTest(HttpUser):
-    wait_time = between(1, 2)  # Temps d'attente entre les requêtes
+class UserBehavior(TaskSet):
 
-    @task
+    @task(1)
     def load_homepage(self):
-        self.client.get("/")  # Test de la page d'accueil
+        with self.client.get("/", catch_response=True) as response:
+            if response.elapsed.total_seconds() > 5:
+                response.failure(f"Homepage loading took too long: {response.elapsed.total_seconds()} seconds")
 
-    @task
-    def load_competition(self):
-        self.client.get("/showSummary")  # Test de la page de résumé
+    @task(2)
+    def update_points(self):
+        data = {'club': 'Simply Lift', 'competition': 'Spring Festival', 'places': 1}
+        with self.client.post("/purchasePlaces", data=data, catch_response=True) as response:
+            if response.elapsed.total_seconds() > 2:
+                response.failure(f"Updating points took too long: {response.elapsed.total_seconds()} seconds")
+
+class WebsiteUser(HttpUser):
+    tasks = [UserBehavior]
+    wait_time = between(1, 5)
