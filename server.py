@@ -1,24 +1,21 @@
 import json
-from flask import Flask,render_template,request,redirect,flash,url_for
-
+from flask import Flask, render_template, request, redirect, flash, url_for
 
 def loadClubs():
     with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
-
+        return json.load(c)['clubs']
 
 def loadCompetitions():
     with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions 
+        return json.load(comps)['competitions']
 
 def saveCompetitions(competitions):
     with open('competitions.json', 'w') as comps:
         json.dump({"competitions": competitions}, comps, indent=4)
 
-
-
+def saveClubs(clubs):
+    with open('clubs.json', 'w') as c:
+        json.dump({"clubs": clubs}, c, indent=4)
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
@@ -34,27 +31,23 @@ def index():
 def showSummary():
     email = request.form['email']
     club = [club for club in clubs if club['email'] == email]
-    
+
     if not club:
         flash("Something went wrong-please try again")
-        return render_template('index.html')  # Ou une page d'erreur
-    
+        return render_template('index.html')
+
     club = club[0]
     return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
-
-
-
 @app.route('/book/<competition>/<club>')
-def book(competition,club):
+def book(competition, club):
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
     if foundClub and foundCompetition:
-        return render_template('booking.html',club=foundClub,competition=foundCompetition)
+        return render_template('booking.html', club=foundClub, competition=foundCompetition)
     else:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
-
 
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
@@ -76,20 +69,14 @@ def purchasePlaces():
 
     # Mise à jour des points et des places
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-    club['points'] = str(int(club['points']) - placesRequired)  # Convertir les points en str pour la sauvegarde
+    club['points'] = str(int(club['points']) - placesRequired)
 
-    # Sauvegarde des compétitions après mise à jour
+    # Sauvegarde des compétitions et des clubs après mise à jour
     saveCompetitions(competitions)
+    saveClubs(clubs)
 
     flash('Great, booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
-
-
-
-
-
-# TODO: Add route for points display
-
 
 @app.route('/logout')
 def logout():
