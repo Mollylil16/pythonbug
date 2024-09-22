@@ -57,7 +57,7 @@ def purchasePlaces():
     placesRequired = int(request.form['places'])
 
     if placesRequired > int(club['points']):
-        flash("Not enough points available to purchase the requested number of places.")
+        fflash("Not enough points available to purchase the requested number of places.")
         return render_template('welcome.html', club=club, competitions=competitions)
 
     if placesRequired > int(competition['numberOfPlaces']):

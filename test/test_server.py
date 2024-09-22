@@ -43,16 +43,20 @@ def test_purchase_places_success(client, test_data):
 
 def test_purchase_places_not_enough_points(client, test_data):
     clubs, competitions = test_data
+    
+    # Mettre à jour le club pour qu'il ait 0 points dans les données de test
+    clubs[1]['points'] = '0'
 
     # Essayer d'acheter plus de places que de points disponibles
     response = client.post('/purchasePlaces', data={
-        'club': clubs[1]['name'],  # Ce club a 0 points dans l'exemple
+        'club': clubs[1]['name'],  # Ce club doit avoir 0 points
         'competition': competitions[0]['name'],
         'places': 1
     })
 
     assert response.status_code == 200
     assert b'Not enough points available to purchase the requested number of places.' in response.data
+
 
 def test_login_success(client, test_data):
     clubs, _ = test_data
