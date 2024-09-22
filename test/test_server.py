@@ -1,6 +1,12 @@
 import pytest
 import json
+import sys
+import os
 from flask import Flask
+
+# Ajout du chemin du répertoire parent au sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from server import app, loadClubs, loadCompetitions
 
 # Chargement des données de test
@@ -32,7 +38,7 @@ def test_purchase_places_success(client, test_data):
 
     assert response.status_code == 200
     assert b'Great, booking complete!' in response.data
-    assert clubs[0]['points'] - 1 == loadClubs()[0]['points']  # Vérifie la déduction des points
+    assert int(clubs[0]['points']) - 1 == int(loadClubs()[0]['points']) # Vérifie la déduction des points
 
 def test_purchase_places_not_enough_points(client, test_data):
     clubs, competitions = test_data
