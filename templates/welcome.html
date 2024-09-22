@@ -41,5 +41,18 @@
             <hr />
         {% endfor %}
     </ul>
+
+    {% if clubs %}
+        <h3>Points des autres clubs :</h3>
+        <ul>
+            {% for other_club in clubs %}
+                {% if other_club['name'] != club['name'] %}
+                    <li>{{ other_club['name'] }}: {{ other_club['points'] }} points</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun club disponible pour afficher les points.</p>
+    {% endif %}
 </body>
 </html>
