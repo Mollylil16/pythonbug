@@ -35,7 +35,7 @@ def test_purchase_places_success(client, test_data):
         'competition': competitions[0]['name'],
         'places': 1
     })
-
+    print(response.data)
     assert response.status_code == 200
     assert b'Great, booking complete!' in response.data
     updated_clubs = loadClubs()

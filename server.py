@@ -34,7 +34,7 @@ def showSummary():
 
     if not club:
         flash("Something went wrong-please try again")
-        return render_template('index.html')  # Ou une page d'erreur
+        return render_template('index.html')  
 
     club = club[0]
     return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
@@ -59,7 +59,9 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
 
-    if placesRequired > int(club['points']):
+    club_points = int(club['points'])  
+
+    if placesRequired > club_points:
         flash("Not enough points available to purchase the requested number of places.")
         return render_template('welcome.html', club=club, competitions=competitions)
 
@@ -71,16 +73,17 @@ def purchasePlaces():
         flash("You cannot book more than 12 places.")
         return render_template('welcome.html', club=club, competitions=competitions)
 
-    # Mise à jour des points et des places
+    
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-    club['points'] = str(int(club['points']) - placesRequired)  # Convertir les points en str pour la sauvegarde
+    club['points'] = str(club_points - placesRequired)  
 
-    # Sauvegarde des compétitions et des clubs après mise à jour
+    
     saveCompetitions(competitions)
-    saveClubs(clubs)  # Ajouté ici
+    saveClubs(clubs)
 
     flash('Great, booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
+
 
 
 @app.route('/logout')
