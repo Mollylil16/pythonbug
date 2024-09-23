@@ -32,6 +32,8 @@ def showSummary():
     email = request.form['email']
     club = [club for club in clubs if club['email'] == email]
 
+    print(f"Email: {email}, Club Found: {club}")
+
     if not club:
         flash("Something went wrong-please try again")
         return render_template('index.html')  
