@@ -8,7 +8,18 @@
 <body>
     <h1>Welcome to the GUDLFT Registration Portal!</h1>
     
-    <!-- Formulaire pour la connexion par email -->
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul style="color: red;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    
     <p>Please enter your secretary email to continue:</p>
     <form action="showSummary" method="post">
         <label for="email">Email:</label>
@@ -16,7 +27,7 @@
         <button type="submit">Enter</button>
     </form>
 
-    <!-- Lien vers la page Public Club Points -->
+    
     <p>
         Or, you can <a href="{{ url_for('publicClubPoints') }}">View Public Club Points</a> directly.
     </p>

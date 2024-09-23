@@ -44,12 +44,12 @@ def test_purchase_places_success(client, test_data):
 def test_purchase_places_not_enough_points(client, test_data):
     clubs, competitions = test_data
     
-    # Mettre à jour le club pour qu'il ait 0 points dans les données de test
+    
     clubs[1]['points'] = '0'
 
-    # Essayer d'acheter plus de places que de points disponibles
+    
     response = client.post('/purchasePlaces', data={
-        'club': clubs[1]['name'],  # Ce club doit avoir 0 points
+        'club': clubs[1]['name'],  
         'competition': competitions[0]['name'],
         'places': 1
     })
@@ -61,14 +61,14 @@ def test_purchase_places_not_enough_points(client, test_data):
 def test_login_success(client, test_data):
     clubs, _ = test_data
 
-    # Simuler une connexion
+    
     response = client.post('/showSummary', data={'email': clubs[0]['email']})
 
     assert response.status_code == 200
-    assert b'Welcome,' in response.data  # Vérifie que le message de bienvenue est présent
+    assert b'Welcome,' in response.data  
 
 def test_login_failure(client):
-    # Essayer de se connecter avec un email inexistant
+    
     response = client.post('/showSummary', data={'email': 'brunell@example.com'})
 
     assert response.status_code == 200
